@@ -1,0 +1,6 @@
+
+#ifndef FORMATSTREAM_H
+#define FORMATSTREAM_H
+
+
+#endif // FORMATSTREAM_H
