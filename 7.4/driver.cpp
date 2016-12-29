@@ -4,13 +4,23 @@
 
 #include "locker.h"
 #include <iostream>
+#include <unistd.h>
 
 int main() {
 
     try {
-        Locker my_lock("my_file");
-    } catch (const std::exception &) {
-        std::cout << "Exception" << std::endl;
+        Locker locked_file("my_file");
+
+        std::string content2 = locked_file.read_file();
+        std::string content = "bla ";
+        locked_file.write_file(content);
+
+        // Locker not_existing_file_lock("not_existing_file");
+        // Locker locked_file_lock("my_file");
+    } catch (const FileNotFoundException &e) {
+        std::cout << e.what() << std::endl;
+    } catch (const FileLockedException &e) {
+        std::cout << e.what() << std::endl;
     }
 
     return 0;

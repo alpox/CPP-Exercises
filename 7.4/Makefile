@@ -1,4 +1,5 @@
-all: driver test
+all: driver test clean_.o
+	touch my_file
 
 driver: driver.o locker.o
 	g++ driver.o locker.o -o driver
@@ -16,4 +17,7 @@ locker.o: locker.cpp locker.h
 	g++ -c locker.cpp -o locker.o
 
 clean:
-	rm *.o driver test
+	rm my_file driver test
+
+clean_.o:
+	rm *.o
