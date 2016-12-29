@@ -22,9 +22,23 @@ private:
 
     std::string filename;
 
+    /**
+     *  Locks the file with read/write access, holds an exclusive lock
+     *
+     *  @throws FileNotFoundException: file not found
+     *  @throws FileLockedException: file locked by another lock 
+     */
     void lock();
 
+    /**
+     *  @throws std::runtime_error: uncaught exception while removing lock
+     */
     void unlock();
+
+    /**
+     * @returns: the lock filename of the locked file
+     */
+    std::string get_lock_filename();
 
 };
 
