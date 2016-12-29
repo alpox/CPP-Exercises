@@ -18,13 +18,7 @@ public:
 
     ~Locker();
 
-    void write_file(const std::string& content);
-
-    const std::string read_file();
-
 private:
-
-    int file_descriptor;
 
     std::string filename;
 

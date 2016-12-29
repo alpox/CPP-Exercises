@@ -9,11 +9,7 @@
 int main() {
 
     try {
-        Locker locked_file("my_file");
-
-        std::string content2 = locked_file.read_file();
-        std::string content = "bla ";
-        locked_file.write_file(content);
+        Locker lock("my_file");
 
         // Locker not_existing_file_lock("not_existing_file");
         // Locker locked_file_lock("my_file");

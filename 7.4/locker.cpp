@@ -4,10 +4,12 @@
 
 #include "locker.h"
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <fcntl.h> // open()
 #include <unistd.h> // close()
 #include <cerrno>
+#include <stdio.h>
 
 Locker::Locker(std::string filename) : filename(filename) {
     lock();
@@ -24,44 +26,29 @@ Locker::~Locker() {
  *  @throws FileLockedException: file locked by another lock 
  */
 void Locker::lock() {
-    file_descriptor = open(filename.c_str(), O_RDWR | O_EXLOCK | O_NONBLOCK);
-    if (file_descriptor == -1){
-        switch(errno){
-            case ENOENT: throw FileNotFoundException();
-            case EAGAIN: throw FileLockedException();
-            default: throw std::runtime_error("uncaught exception");
-        }
-        
+    std::string lock_filename(filename);
+    lock_filename.append(".lock");
+
+    std::ifstream file_exists_ifs(filename);
+    if (!file_exists_ifs.good()){
+        throw FileNotFoundException();
     }
+    file_exists_ifs.close();
+
+    std::ifstream lock_exists_ifs(lock_filename);
+    if (lock_exists_ifs.good()){
+        throw FileLockedException();
+    }
+    lock_exists_ifs.close();
+
+    std::ofstream create_lock_file_ofs(lock_filename);
+    create_lock_file_ofs.close();
 }
 
 void Locker::unlock() {
-    close(file_descriptor);
-}
-
-void Locker::write_file(const std::string& content) {
-    if(write(file_descriptor, content.c_str(), content.length()) == -1){
-        throw std::runtime_error("write failed");
-    }
-}
-
-const std::string Locker::read_file() {
-    std::string content = "";
-    while(true){
-        char buf[256];
-        int bytes_read = read(file_descriptor, buf, 256);
-
-        // nothing to read
-        if (bytes_read == 0){
-            break;
-
-        // error
-        } else if (bytes_read == -1){
-            throw std::runtime_error("read failed");
-        }
-        content.append(buf, bytes_read);
-    }
-    return content;
+    std::string lock_filename(filename);
+    lock_filename.append(".lock");
+    std::remove(lock_filename.c_str());
 }
 
 FileNotFoundException::FileNotFoundException() : std::runtime_error("file not found") {}
