@@ -9,8 +9,8 @@
 * [ ] Special case handling
 
 ## Exercise 6.2
-* [ ] Demonstration of `std::mem_fun`
-* [ ] Explain purpose of `std::mem_fun`
+* [x] Demonstration of `std::mem_fun`
+* [x] Explain purpose of `std::mem_fun`
 
 ## Exercise 6.3 Connect 4 Interoperability
 * [ ] Keep interface
