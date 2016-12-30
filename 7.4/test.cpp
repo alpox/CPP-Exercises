@@ -84,6 +84,7 @@ int main(){
 	test_non_existing_file();
 	test_non_existing_file();
 	test_create_if_not_exists();
+	test_delete_file_on_destruct();
 	std::cout << "All tests passed" << std::endl;
 	return 0;
 }
