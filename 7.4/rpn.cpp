@@ -37,14 +37,7 @@ void RPN() {
     string filename = "testOutput.txt";
 
     try {
-        std::fstream new_file;
-        new_file.open(filename, fstream::in | fstream::out);
-    } catch(...) {
-        cout << "Could not create file '" << filename << "'. Terminating." << endl;
-    }
-
-    try {
-        Locker locker(filename);
+        Locker locker(filename, CREATE_IF_NOT_EXISTS);
         pvector<T> rpnStack(filename);
 
         pair<T, T> values;
