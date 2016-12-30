@@ -17,4 +17,4 @@ formatstream.o: formatstream.cpp formatstream.h
 	g++ -c formatstream.cpp -o formatstream.o
 
 clean:
-	rm test driver
+	rm test driver *.o
