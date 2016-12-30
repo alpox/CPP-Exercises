@@ -1,0 +1,5 @@
+There is no difference in the assembly code produced.
+The references seem to be only syntactic sugar for working with pointers.
+
+Declaring the functions inline, make them compile only if they are actually needed,
+what is the reason for why there is no code produced for the inline-only functions.
