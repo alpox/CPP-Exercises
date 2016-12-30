@@ -18,4 +18,4 @@ locker.o: locker.cpp locker.h
 	g++ -c locker.cpp -o locker.o
 
 clean:
-	rm my_file driver test
+	rm my_file driver test *.o
