@@ -1,0 +1,25 @@
+Questions:
+
+1. char ch;
+2. string s;
+3. extern int error_number;
+4. static double sq(double);
+5. int count=1;
+6. const double pi=3.2; // according to Indiana Pi Bill struct fraction { int c; int d; };
+7. char *prog[]={"echo","hello","world!",NULL};
+8. extern "C" void c_swap(int *a, int *b);
+9. double sqrt(double);
+10. void swap(int &a, int &b) { int c=a; a=b; b=c; } template<typename T> T add(T a, T b) { return a+b; } namespace { int a; }
+11. struct user;
+
+Solutions:
+1, 2: Implementation file or header file. (Given the names, these are obviously local variables)
+3: Header file
+4: Header file
+5: Local variable -> Implementation file or header file.
+6: Header file
+7: Header file or implementation file (Given the kind of strings, this probably is used in a cpp file
+8: Header file
+9: Header file
+10: Header file
+11: Header file

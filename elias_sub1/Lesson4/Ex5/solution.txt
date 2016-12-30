@@ -1,0 +1,9 @@
+The class somefunction_t takes a binary function and two unary functions
+and allows to call itself. -->
+somefunction_t(BinOp, U1, U2)(x)
+
+Where x is an argument with which both unary functions get called and their
+results are passed to BinOp in order, providing a new result value.
+
+This can be useful if you have a binary function, of which both arguments you want to give to it
+ depend on one single value, which have to be transformed to another format before passing it to the binary function.
