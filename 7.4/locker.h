@@ -6,7 +6,7 @@
 #define CPP_EXERCISES_LOCKER_H
 
 #include <string>
-#include <exception>
+#include <stdexcept>
 
 /**
  * Locker class

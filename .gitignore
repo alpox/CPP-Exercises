@@ -4,6 +4,12 @@
 *.o
 *.obj
 
+# Vim swap files
+*.swp
+
+# Lock files
+*.lock
+
 # Precompiled Headers
 *.gch
 *.pch
