@@ -8,13 +8,16 @@
 #include <string>
 #include <stdexcept>
 
+#define CREATE_IF_NOT_EXISTS 0x01
+#define DELETE_FILE_ON_DESTRUCT 0x02
+
 /**
  * Locker class
  */
 class Locker {
 public:
 
-    Locker(std::string filename);
+    Locker(std::string filename, int flags = 0);
 
     ~Locker();
 
@@ -39,6 +42,8 @@ private:
      * @returns: the lock filename of the locked file
      */
     std::string get_lock_filename();
+
+    int flags;
 
 };
 

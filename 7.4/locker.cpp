@@ -7,7 +7,7 @@
 #include <string>
 #include <stdio.h>
 
-Locker::Locker(std::string filename) : filename(filename) {
+Locker::Locker(std::string filename, int flags) : filename(filename), flags(flags) {
     lock();
 }
 
@@ -20,7 +20,12 @@ void Locker::lock() {
     // check if file exists
     std::ifstream file_exists_ifs(filename);
     if (!file_exists_ifs.good()){
-        throw FileNotFoundException();
+        if (flags & CREATE_IF_NOT_EXISTS){
+            std::ofstream create_file_ofs(filename);
+            create_file_ofs.close();        
+        } else {
+            throw FileNotFoundException();
+        }
     }
     file_exists_ifs.close();
 
@@ -39,6 +44,9 @@ void Locker::lock() {
 void Locker::unlock() {
     
     if (std::remove(get_lock_filename().c_str()) == -1){
+        throw std::runtime_error("uncaught exception");
+    }
+    if (flags & DELETE_FILE_ON_DESTRUCT && (std::remove(filename.c_str()) == -1)) {
         throw std::runtime_error("uncaught exception");
     }
 }
