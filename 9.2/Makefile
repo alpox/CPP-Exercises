@@ -1,4 +1,5 @@
-all: test driver clean_.o
+all: test driver
+	rm *.o
 
 driver: driver.o formatstream.o
 	g++ driver.o formatstream.o -o driver
@@ -17,6 +18,3 @@ formatstream.o: formatstream.cpp formatstream.h
 
 clean:
 	rm test driver
-
-clean_.o:
-	rm *.o

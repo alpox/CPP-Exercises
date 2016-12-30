@@ -2,24 +2,28 @@
 #include "formatstream.h"
 #include <vector>
 #include <ostream>
+#include <iostream>
 
-formatstream::formatstream(std::ostream &sink) : sink(sink), indent_level(0) {
+formatstream::formatstream(std::ostream &sink) : sink(&sink), original_steambuf(sink.rdbuf(this)), indent_level(0) {
 	setp(buf, buf + sizeof(buf));
 }
 
+formatstream::~formatstream(){
+	if(sink) sink->rdbuf(original_steambuf);
+}
+
 formatstream::int_type formatstream::overflow(formatstream::int_type ch){
-	if (ch != traits_type::eof() && sync() == 0) return sputc(ch);
+	if (ch != traits_type::eof() && *sink && sync() == 0) return sputc(ch);
 	return traits_type::eof();
 }
 
 int formatstream::sync(){
 	if (pbase() == pptr()) return 0;
-
 	std::vector<char> rendered;
 	bool escaped = false;
 	bool new_line = false;
 	for (char* c_ptr = pbase(); c_ptr < pptr(); ++c_ptr) {
-		if (*c_ptr == '\""' || *c_ptr == '\''){
+		if (*c_ptr == '\"' || *c_ptr == '\''){
 			escaped = !escaped;
 			rendered.push_back(*c_ptr);
 		} else if (!escaped && (*c_ptr == '(' || *c_ptr == '{' || *c_ptr == '[')) {
@@ -38,9 +42,11 @@ int formatstream::sync(){
 		}
 	}
 
+	// write rendered content to original_steambuf
+	std::streamsize n = original_steambuf->sputn(&rendered.front(), rendered.size());
+
 	// puts the pptr back to pbase
-	pbump(pbase() - pptr());
+	setp(buf, buf + sizeof(buf));
 	
-	// write rendered content to sink
-	return sink.write(&rendered.front(), rendered.size()) ? 0 : -1;
+	return n ? 0 : -1;
 }
