@@ -1,4 +1,4 @@
-# Checklist lab submission 2
+﻿# Checklist lab submission 2
 
 [Task PDF](http://researcher.watson.ibm.com/researcher/files/zurich-THG/Lab%20Submission%202.pdf)
 
@@ -9,8 +9,8 @@
 * [ ] Special case handling
 
 ## Exercise 6.2
-* [ ] Demonstration of `std::mem_fun`
-* [ ] Explain purpose of `std::mem_fun`
+* [x] Demonstration of `std::mem_fun`
+* [x] Explain purpose of `std::mem_fun`
 
 ## Exercise 6.3 Connect 4 Interoperability
 * [ ] Keep interface
@@ -53,8 +53,8 @@
 * [ ] Compute the computer players next moves with threads
 
 ## Exercise 8.4 Constructor, destructor execution
-* [ ] Tell in which order the constructors/destructors of an object are executed in case of inheritance.
-* [ ] Show the same for multiple inheritance
+* [x] Tell in which order the constructors/destructors of an object are executed in case of inheritance.
+* [x] Show the same for multiple inheritance
 
 ## Exercise 9.1 Change format of single output operation
 * [ ] Create a class which does the job shown in the lab submission paper ([Task PDF](http://researcher.watson.ibm.com/researcher/files/zurich-THG/Lab%20Submission%202.pdf))
