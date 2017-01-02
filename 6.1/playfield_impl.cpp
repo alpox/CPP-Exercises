@@ -48,13 +48,28 @@ bool playfield_impl::isWin(int player, int x, int y, int dx, int dy) {
     if(!isValidColumn(x)) return false;
     if(!isValidRow(y)) return false;
 
+    int same = 0;
+    bool inverted = false;
+
     for(int i = 0; i < 4; i++) {
-        int xx = x + (i * dx);
-        int yy = y + (i * dy);
-        if(!isValidColumn(xx) || !isValidRow(yy)) return false;
-        if(stoneat(xx, yy) != player) return false;
+        int xx = inverted ? x - (i * dx) : x + (i * dx);
+        int yy = inverted ? y - (i * dy) : y + (i * dy);
+
+        bool found = isValidColumn(xx) && isValidRow(yy) && stoneat(xx, yy) == player;
+
+        if(found) same += 1;
+
+        if((!inverted && i == 3) ||
+           (!inverted && !found)) {
+            i = 0;
+            inverted = true;
+            continue;
+        }
+
+        if(!found) break;
     }
-    return true;
+
+    return same == 4;
 }
 
 bool playfield_impl::isWin(int player, int x, int y) {
@@ -64,14 +79,10 @@ bool playfield_impl::isWin(int player, int x, int y) {
 
     bool win = false;
 
-    win = win || isWin(player, x, y, -1, -1);
-    win = win || isWin(player, x, y,  0, -1);
-    win = win || isWin(player, x, y,  1, -1);
-    win = win || isWin(player, x, y, -1,  0);
-    win = win || isWin(player, x, y,  1,  0);
-    win = win || isWin(player, x, y, -1,  1);
-    win = win || isWin(player, x, y,  0,  1);
-    win = win || isWin(player, x, y,  1,  1);
+    win = win || isWin(player, x, y,  1, 0);
+    win = win || isWin(player, x, y,  0, 1);
+    win = win || isWin(player, x, y,  1, 1);
+    win = win || isWin(player, x, y, -1, 1);
 
     return win;
 }

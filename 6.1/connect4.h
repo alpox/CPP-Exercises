@@ -15,7 +15,6 @@ private:
 
 private:
     void handleWin(player *player);
-    void printField();
     
     // ChangePlayer returns the number of the new player
     int changePlayer();
