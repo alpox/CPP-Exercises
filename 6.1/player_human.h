@@ -7,10 +7,9 @@
 #include "playfield.h"
 #include "playfield_impl.h"
 
-class player_human : public player {
-private:
-    void printField(const playfield &field);
+class player_human : public player {  
 public:
+    void printField(const playfield &field);
     int play(const playfield &field);
     ~player_human() {}
 };

@@ -13,5 +13,6 @@ int main() {
     connect4 game(&field, &player1, &player2);
 
     game.start();
+    player1.printField(field);
     return 0;
 }

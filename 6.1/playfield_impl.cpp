@@ -57,10 +57,10 @@ bool playfield_impl::isWin(int player, int x, int y, int dx, int dy) {
 
         bool found = isValidColumn(xx) && isValidRow(yy) && stoneat(xx, yy) == player;
 
-        if(found) same += 1;
+        if(found)
+            if(++same == 4) return true;
 
-        if((!inverted && i == 3) ||
-           (!inverted && !found)) {
+        if(!inverted && (i == 3 || !found)) {
             i = 0;
             inverted = true;
             continue;
@@ -69,7 +69,7 @@ bool playfield_impl::isWin(int player, int x, int y, int dx, int dy) {
         if(!found) break;
     }
 
-    return same == 4;
+    return same >= 4;
 }
 
 bool playfield_impl::isWin(int player, int x, int y) {
