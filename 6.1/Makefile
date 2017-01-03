@@ -1,4 +1,5 @@
 all: play
+	rm *.o
 
 play: play.o connect4.o player_comp.o player_human.o playfield_impl.o
 	g++ -std=c++11 play.o connect4.o player_comp.o player_human.o playfield_impl.o -o play
