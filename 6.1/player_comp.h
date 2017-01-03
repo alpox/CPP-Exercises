@@ -9,16 +9,11 @@
 
 class player_comp : public player {
 private:
-    playfield_impl *simulationField = NULL;
-
-    int playerNumber;
-
-    void copyFieldToSimulation(const playfield &field);
-    void deleteSimulation();
+    int player_number;
 public:
     int play(const playfield &field);
-    player_comp(int playerNumber) : playerNumber(playerNumber) { }
-    ~player_comp() { deleteSimulation(); }
+    player_comp(const int &player_number);
+    ~player_comp();
 };
 
 #endif /* PLAYER_H_ */
