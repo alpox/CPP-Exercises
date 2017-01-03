@@ -6,15 +6,22 @@
 #include <vector>
 #include <cassert>
 
-player_comp::player_comp(const int &player_number) : player_number(player_number) {}
+template<typename strategy>
+player_comp<strategy>::~player_comp() {}
 
-player_comp::~player_comp() {}
+template<typename strategy>
+player_comp<strategy>::player_comp(const int &player_number) : player_number(player_number) {}
 
-int player_comp::play(const playfield &field) {
+template<typename strategy>
+int player_comp<strategy>::play(const playfield &field) {
+    return strategy()(field, player_number);
+}
+
+int base_strategy::operator()(const playfield& field, const int &player_number){
     std::vector<int> free_slots;
 
     for(int x = 0; x < playfield::width; x++) {
-        
+
         playfield_impl field_copy(field);
 
         if(field_copy.canSetStone(x)){
@@ -30,3 +37,5 @@ int player_comp::play(const playfield &field) {
     // Returns any free slot
     return free_slots.at(rand() % free_slots.size());
 }
+
+template class player_comp<base_strategy>;
