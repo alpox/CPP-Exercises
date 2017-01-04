@@ -4,6 +4,8 @@
 #include <sstream>
 #include <algorithm>
 #include <complex>
+#include <cmath>
+#include <stdexcept>
 
 #include "pvector.h"
 
@@ -27,11 +29,20 @@ inline void printStack(pvector<T> &rpnStack) {
     }
 }
 
+template<typename T>
+bool operator<(const complex<T> &c, const complex<T> &n) {
+	// Do calculation
+	return true;
+}
 
 template<typename T>
 inline T mymin(T a, T b) {
-	// return a<b?a:b; // doesn't work for complex numbers
-	return a;
+	return a<b?a:b; // doesn't work for complex numbers
+}
+
+template<typename c_type>
+inline complex<c_type> mymin(complex<c_type> a, complex<c_type> b) {
+	throw std::invalid_argument("Complex numbers are not allowed.");
 }
 
 template <typename T>
@@ -75,7 +86,13 @@ void RPN() {
 						break;
 					}
 					cum = *rpnStack.begin();
-					for_each(rpnStack.begin(), rpnStack.end(), [&] (T &entry) { cum = mymin(cum, entry); });
+					try {
+						for_each(rpnStack.begin(), rpnStack.end(), [&] (T &entry) { cum = mymin(cum, entry); });
+					}
+					catch(std::invalid_argument) {
+						cout << "Tried to call minimum function with complex numbers. Do nothing." << endl;
+						break;
+					}
 					rpnStack.push_back(cum);
 					break;
 				case '+':
