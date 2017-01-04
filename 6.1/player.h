@@ -1,13 +1,39 @@
 #ifndef PLAYER_H_
 #define PLAYER_H_
 
-#include <iostream>
 #include "playfield.h"
+#include <iostream>
+#include <vector>
 
 class player {
 public:
     virtual int play(const playfield &field) = 0;
-    virtual ~player() {}
+    virtual ~player() {};
+};
+
+class numbered_player : public player {
+public:
+    numbered_player(const int& number);
+
+    virtual int play(const playfield &field) = 0;
+    int get_number() const;
+    void set_number(const int & number);
+
+    bool operator == (const numbered_player &other);
+private:
+    int number;
+};
+
+class human_player : public numbered_player {
+public:
+	human_player(const int &number);
+    int play(const playfield &field);
+};
+
+class cpu_player : public numbered_player {
+public:
+    cpu_player(const int &number);
+    int play(const playfield &field);
 };
 
 #endif /* PLAYER_H_ */
