@@ -34,6 +34,9 @@ class cpu_player : public numbered_player {
 public:
     cpu_player(const int &number);
     int play(const playfield &field);
+private:
+    std::vector<int> get_possible_slots(const playfield &field);
+    int find_win_slot(const playfield &field, const int & player_number);
 };
 
 #endif /* PLAYER_H_ */
