@@ -1,5 +1,5 @@
 
-#include "playfield_impl.h"
+#include "playfield.h"
 
 #include <iostream>
 #include <cassert>
@@ -119,4 +119,40 @@ bool playfield_impl::setStoneInColumn(int player, int x) {
 
     int y = setStone(player, x);
     return isWin(player, x, y);
+}
+
+void playfield_impl::print(){
+    std::cout << std::endl;
+    for(int p = 0; p < playfield::width; p++) {
+        std::cout << "-----";
+    }
+    std::cout << std::endl;
+    for(int y = 0; y < playfield::height; y++) {
+        for(int x = 0; x < playfield::width; x++) {
+            int sp = stoneat(x, y);
+            char ch;
+            switch(sp) {
+                case playfield::player1:
+                    ch = 'X';
+                    break;
+                case playfield::player2:
+                    ch = 'O';
+                    break;
+                default:
+                    ch = ' ';
+                    break;
+            }
+            std::cout << "|" << " " << ch << " " << "|";
+        }
+        std::cout << std::endl;
+    }
+
+    for(int p = 0; p < playfield::width; p++) {
+        std::cout << "-----";
+    }
+    std::cout << std::endl;
+    for(int p = 0; p < playfield::width; p++) {
+        std::cout << "  " << (char)('A' + p) << "  ";
+    }
+    std::cout << std::endl;
 }
