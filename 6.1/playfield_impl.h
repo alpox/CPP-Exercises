@@ -16,6 +16,8 @@ protected:
     static bool isValidColumn(int x);
     static bool isValidRow(int y);
 public:
+    playfield_impl();
+    playfield_impl(const playfield &field);
     int stoneat(int x, int y) const;
     bool isFull();
     bool canSetStone(int x);

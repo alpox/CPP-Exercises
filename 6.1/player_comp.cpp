@@ -6,40 +6,36 @@
 #include <vector>
 #include <cassert>
 
-int randomInteger(int max) {
-    return rand() % max;
+template<typename strategy>
+player_comp<strategy>::~player_comp() {}
+
+template<typename strategy>
+player_comp<strategy>::player_comp(const int &player_number) : player_number(player_number) {}
+
+template<typename strategy>
+int player_comp<strategy>::play(const playfield &field) {
+    return strategy()(field, player_number);
 }
 
-int player_comp::play(const playfield &field) {
-    copyFieldToSimulation(field);
-
-    assert(!simulationField->isFull());
-
-    std::vector<int> free;
-    for(int x = 0; x < playfield::width; x++) {
-        playfield_impl impCopy(*simulationField);
-        if(!impCopy.canSetStone(x)) continue;
-        if(impCopy.setStoneInColumn(playerNumber, x)) return x;
-
-        // Slot is free. remember.
-        free.push_back(x);
-    }
-    return free.at(randomInteger(free.size()));
-}
-
-void player_comp::deleteSimulation() {
-    if(simulationField != NULL) delete simulationField;
-}
-
-void player_comp::copyFieldToSimulation(const playfield &field) {
-    deleteSimulation();
-    simulationField = new playfield_impl();
-
+int base_strategy::operator()(const playfield& field, const int &player_number){
+    std::vector<int> free_slots;
 
     for(int x = 0; x < playfield::width; x++) {
-        for(int y = playfield::height - 1; y >= 0; y--) {
-            if(field.stoneat(x, y) == playfield::none) continue;
-            simulationField->setStoneInColumn(field.stoneat(x, y), x);
+
+        playfield_impl field_copy(field);
+
+        if(field_copy.canSetStone(x)){
+
+            // Found a winning slot
+            if(field_copy.setStoneInColumn(player_number, x)) return x;
+
+            // Slot is free.
+            free_slots.push_back(x);
         }
     }
+
+    // Returns any free slot
+    return free_slots.at(rand() % free_slots.size());
 }
+
+template class player_comp<base_strategy>;

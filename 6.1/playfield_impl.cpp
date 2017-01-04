@@ -3,7 +3,17 @@
 
 #include <iostream>
 #include <cassert>
- 
+
+playfield_impl::playfield_impl() : playfield() {}
+
+playfield_impl::playfield_impl(const playfield &field) {
+    for(int x = 0; x < playfield::width; ++x){
+        for(int y = 0; y < playfield::height; ++y){
+            rep[x][y] = field.stoneat(x,y);
+        }
+    }
+}
+
 int playfield_impl::stoneat(int x, int y) const { 
     assert(isValidColumn(x));
     assert(isValidRow(y));
