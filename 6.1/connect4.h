@@ -1,28 +1,25 @@
+
 #ifndef CONNECT4_H_
 #define CONNECT4_H_
 
-#include "playfield.h"
-#include "playfield_impl.h"
 #include "player.h"
+#include "playfield.h"
+#include <string>
+#include <iostream>
 
 class connect4 {
+public:
+    connect4(playfield_impl &field, numbered_player &player1, numbered_player &player2);
+    void start();
 private:
-    playfield_impl *field;
-    player *player1;
-    player *player2;
+    playfield_impl field;
+    numbered_player &player1;
+    numbered_player &player2;
 
-    player *currentPlayer;
-
-private:
-    void handleWin(player *player);
+    numbered_player *current_player;
     
     // ChangePlayer returns the number of the new player
-    int changePlayer();
-public:
-    connect4(playfield_impl *field, player *player1, player *player2):
-        field(field), player1(player1), player2(player2), currentPlayer(player1) {};
-    
-    void start();
+    void change_player();
 };
 
 #endif // CONNECT4_H_
