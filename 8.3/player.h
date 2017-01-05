@@ -5,7 +5,6 @@
 #include <iostream>
 #include <vector>
 #include <thread>
-#include <mutex>
 
 class player {
 public:
@@ -44,14 +43,24 @@ protected:
 class threaded_cpu_player : public cpu_player {
 public:
     threaded_cpu_player(const int &number);
+    ~threaded_cpu_player();
     int play(const playfield &field);
 private:
-    std::vector<std::pair<playfield_impl, int> > future_strategies;
-    void compute_futures(const playfield_impl &field);
-    void future(const playfield_impl &future_field);
-    std::mutex computation_mutex;
-    std::mutex count_down_latch_mutex;
-    int count_down_latch;
+
+    // vector containing pairs of possible_fields and their best responses
+    std::vector<std::pair<playfield_impl, int> > best_responses;
+    
+    // mutex lock for best_responses
+    std::mutex best_responses_mutex;
+
+    // vector containing threads which compute the best response given a possible_field
+    std::vector<std::thread> best_response_computation_threads;
+
+    // the computation of a best response given a possible_field. To be executed by a thread
+    void compute_best_response(const playfield_impl &pussible_field);
+
+    // calculates all initial best responses. That is all best reponses on the beggining of a game
+    std::vector<std::pair<playfield_impl, int> > initial_best_responses();
 };
 
 #endif /* PLAYER_H_ */

@@ -13,7 +13,7 @@ int main() {
 
     bool player1_selected = false;
     do {
-        std::cout << "Choose Player 1:" << std::endl << "(1) human" << std::endl << "(2) basic cpu" << std::endl << "option: ";
+        std::cout << "Choose Player 1:" << std::endl << "(1) human" << std::endl << "(2) basic cpu" << std::endl << "(3) threaded cpu" << std::endl << "option: ";
         char input;
         std::cin >> input;
 
@@ -26,6 +26,10 @@ int main() {
                 player1 = player_factory::make_basic_cpu(1);
                 player1_selected = true;
                 break;
+            case '3':
+                player1 = player_factory::make_threaded_cpu(1);
+                player1_selected = true;
+                break;
             default:
                 std::cout << "Invalid choice" << std::endl;
                 break;
@@ -34,7 +38,7 @@ int main() {
 
     bool player2_selected = false;
     do {
-        std::cout << "Choose Player 2:" << std::endl << "(1) human" << std::endl << "(2) basic cpu" << std::endl << "option: ";
+        std::cout << "Choose Player 2:" << std::endl << "(1) human" << std::endl << "(2) basic cpu" << std::endl << "(3) threaded cpu" << std::endl << "option: ";
         char input;
         std::cin >> input;
 
@@ -45,6 +49,10 @@ int main() {
                 break;
             case '2':
                 player2 = player_factory::make_basic_cpu(2);
+                player2_selected = true;
+                break;
+            case '3':
+                player2 = player_factory::make_threaded_cpu(2);
                 player2_selected = true;
                 break;
             default:

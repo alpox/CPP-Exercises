@@ -44,14 +44,18 @@ cpu_player::cpu_player(const int &number) : numbered_player(number) {}
 
 int cpu_player::play(const playfield &field){
 
+    // find winning slot on possible enemy turn
     int win_slot = find_win_slot(field, get_number());
-    if (win_slot != -1) return win_slot;
 
+    // find enemy winning slot on possible enemy turn
     int enemy_win_slot = find_win_slot(field, get_enemy_number());
-    if (enemy_win_slot != -1) return enemy_win_slot;
 
+    // random slot on possible enemy turn
     std::vector<int> possible_slots = get_possible_slots(field);
-    return possible_slots.at(rand() % possible_slots.size());
+    int random_possible_slot = possible_slots.at(rand() % possible_slots.size());
+
+    // priority order: win_slot, enemy_win_slot, random_possible_slot
+     return (win_slot != -1) ? win_slot : (enemy_win_slot != -1) ? enemy_win_slot : random_possible_slot;
 }
 
 int cpu_player::find_win_slot(const playfield &field, const int &player_number){
@@ -75,72 +79,76 @@ std::vector<int> cpu_player::get_possible_slots(const playfield& field){
     return possible_slots;
 }
 
-threaded_cpu_player::threaded_cpu_player(const int &number) : cpu_player(number) {}
+threaded_cpu_player::threaded_cpu_player(const int &number) : cpu_player(number), best_responses(initial_best_responses()) {}
+
+threaded_cpu_player::~threaded_cpu_player() {
+    // wait for pending threads
+    for (std::thread &best_response_computation_thread : best_response_computation_threads){
+        best_response_computation_thread.join();
+    }
+}
 
 int threaded_cpu_player::play(const playfield &field){
 
-    playfield_impl actual_field(field);
     int slot;
+    playfield_impl actual_field(field);
 
     // wait until computation finished from last round
-    computation_mutex.lock();
-
-    // computation finished
-    for(std::pair<playfield_impl, int> future_strategy : future_strategies){
-        if (future_strategy.first == actual_field){
-            slot = future_strategy.second;
-            break;
-        }
+    for (std::thread &best_response_computation_thread : best_response_computation_threads) {
+        best_response_computation_thread.join();
     }
-    computation_mutex.unlock();
+
+    // find which best_response matches the actual field
+    best_responses_mutex.lock();
+    for(std::pair<playfield_impl, int> &best_response : best_responses){
+        if (best_response.first == actual_field) slot = best_response.second;
+    }
+    best_responses.clear();
+    best_responses_mutex.unlock();
 
     // start next round's computation
+    best_response_computation_threads.clear();
+
     playfield_impl updated_field(field);
     updated_field.set_stone_in_column(get_number(), slot);
-    compute_futures(updated_field);
+
+    // create every possible enemy move and assign a thread towards calculating the best response
+    std::vector<int> enemy_possible_slots = get_possible_slots(updated_field);
+    for (int enemy_possible_slot : enemy_possible_slots){
+        playfield_impl possible_field(updated_field);
+        possible_field.set_stone_in_column(get_enemy_number(), enemy_possible_slot);
+        best_response_computation_threads.push_back(std::thread (&threaded_cpu_player::compute_best_response, this, possible_field));
+    }
 
     return slot;
 }
 
-void threaded_cpu_player::compute_futures(const playfield_impl &field){
+// compute best response given enemy's move
+void threaded_cpu_player::compute_best_response(const playfield_impl &possible_field){
+    // best response
+    int slot = cpu_player::play(possible_field);
 
-    computation_mutex.lock();
-    future_strategies.clear();
-    std::vector<int> enemy_possible_slots = get_possible_slots(field);
-
-    // initialize count down latch. the last finishing thread will unlock the lock
-    count_down_latch_mutex.lock();
-    count_down_latch = enemy_possible_slots.size();
-    count_down_latch_mutex.unlock();
-
-    for (int enemy_possible_slot : enemy_possible_slots){
-        playfield_impl future_field(field);
-        future_field.set_stone_in_column(get_enemy_number(), enemy_possible_slot);
-        std::thread future_computation(&threaded_cpu_player::future, this, future_field);
-    }
+    // save field and best response
+    best_responses_mutex.lock();
+    best_responses.push_back(std::pair<playfield_impl, int>(possible_field, slot));
+    best_responses_mutex.unlock();
 }
 
-// thread
-void threaded_cpu_player::future(const playfield_impl &future_field){
+// computes initial best responses
+std::vector<std::pair<playfield_impl, int> > threaded_cpu_player::initial_best_responses(){
 
-    // find winning slot on possible enemy turn
-    int win_slot = cpu_player::find_win_slot(future_field, cpu_player::get_number());
+    std::vector<std::pair<playfield_impl, int> > _initial_best_responses;
 
-    // find enemy winning slot on possible enemy turn
-    int enemy_win_slot = cpu_player::find_win_slot(future_field, cpu_player::get_enemy_number());
+    // best response when playing first
+    _initial_best_responses.push_back(std::pair<playfield_impl, int>(playfield_impl(), playfield::width / 2));
 
-    // random slot on possible enemy turn
-    std::vector<int> possible_slots = cpu_player::get_possible_slots(future_field);
-    int random_possible_slot = possible_slots.at(rand() % possible_slots.size());
-
-    // priority order: win_slot, enemy_win_slot, random_possible_slot
-    std::pair<playfield_impl, int> future_strategy(future_field, (win_slot != -1) ? win_slot : (enemy_win_slot != -1) ? enemy_win_slot : random_possible_slot);
-    future_strategies.push_back(future_strategy);
-
-    // check if this thread is the last thread
-    count_down_latch_mutex.lock();
-    if ( --count_down_latch == 0 ) {
-        computation_mutex.unlock();
+    // best responses when playing second
+    for(int x = 0; x < playfield::width; ++x){
+        playfield_impl possible_field;
+        possible_field.set_stone_in_column(get_enemy_number(), x);
+        int slot = (x == playfield::width / 2) ? (playfield::width / 2) -1 : rand() % playfield::width;
+        _initial_best_responses.push_back(std::pair<playfield_impl, int>(possible_field, slot));
     }
-    count_down_latch_mutex.unlock();
+
+    return _initial_best_responses;
 }

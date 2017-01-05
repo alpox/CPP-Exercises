@@ -160,7 +160,9 @@ void playfield_impl::print(){
 bool playfield_impl::operator== (const playfield_impl& other){
     for(int x = 0; x < playfield::width; ++x){
         for(int y = 0; y < playfield::height; ++y){
-            if(stoneat(x,y) != other.stoneat(x,y)) return false;
+            if(stoneat(x,y) != other.stoneat(x,y)) {
+                return false;
+            }
         }
     }
     return true;
