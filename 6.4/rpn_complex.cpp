@@ -30,9 +30,8 @@ inline void printStack(pvector<T> &rpnStack) {
 }
 
 template<typename T>
-bool operator<(const complex<T> &c, const complex<T> &n) {
-	// Do calculation
-	return true;
+bool operator<(const complex<T> &c1, const complex<T> &c2) {
+	return std::abs(c1) < std::abs(c2);
 }
 
 template<typename T>
@@ -40,10 +39,10 @@ inline T mymin(T a, T b) {
 	return a<b?a:b; // doesn't work for complex numbers
 }
 
-template<typename c_type>
-inline complex<c_type> mymin(complex<c_type> a, complex<c_type> b) {
-	throw std::invalid_argument("Complex numbers are not allowed.");
-}
+// template<typename c_type>
+// inline complex<c_type> mymin(complex<c_type> a, complex<c_type> b) {
+// 	throw std::invalid_argument("Complex numbers are not allowed.");
+// }
 
 template <typename T>
 void RPN() {
