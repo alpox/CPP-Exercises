@@ -15,7 +15,7 @@ int main() {
     v2.push_back(5);
     v2.push_back(4);
 
-    container_merger::merge(v1, v2, o);
+    container_merger<std::vector<int> >::merge(v1, v2, o);
 
     std::cout << o[0] << std::endl << o[1] << std::endl << o[2] << std::endl << o[3] << std::endl << o[4] << std::endl << o[5] << std::endl;
     return 0;

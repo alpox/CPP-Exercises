@@ -14,7 +14,7 @@ void test_merge(){
     v2.push_back(5);
     v2.push_back(6);
 
-    container_merger::merge(v1, v2, o);
+    container_merger<std::vector<int> >::merge(v1, v2, o);
 
 	assert(o[0] == 1);
 	assert(o[1] == 2);
