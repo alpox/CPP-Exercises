@@ -1,13 +1,13 @@
 #include <iostream>
+#include <sstream>
 
 using namespace std;
 
 struct Form{
     int prc;
     ios_base::fmtflags fmt;
-    ostream& formatStream;
 
-    Form(ostream& os = cout, int p = 6) : formatStream(os), prc(p){
+    Form(int p = 6) : prc(p){
     }
 
     Form& scientific(){
@@ -20,16 +20,13 @@ struct Form{
         return *this;
     }
 
-    ostream& operator()(double value){
-        formatStream.setf(fmt, ios_base::floatfield);
-        formatStream.precision(prc);
-        formatStream << value;
-        return formatStream;
-    }
-
-    ~Form(){
-        formatStream.unsetf(ios_base::floatfield);
-        formatStream.precision(6);
+    string operator()(double value){
+        stringstream ss;
+        ss.setf(fmt, ios_base::floatfield);
+        ss.precision(prc);
+        ss << value;
+        string myString = ss.str();
+        return myString;
     }
 };
 
@@ -39,11 +36,11 @@ ostream& operator<<(ostream& os, const Form &f){
     return os;
 }
 
-Form gen4(cout, 4);
 void f(double d){
+    Form gen4(4);
     Form sci8 = gen4;
-    sci8.scientific().precision(8);
-    cout << gen4(d) << " back to old options: " << d << endl;
+    sci8.scientific();
+    cout << gen4(d) << " back to old option: " << d << endl;
 }
 
 int main() {
