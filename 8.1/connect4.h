@@ -9,17 +9,20 @@
 
 class connect4 {
 public:
-    connect4(playfield_impl &field, numbered_player &player1, numbered_player &player2);
+    connect4(playfield_impl &field, player *player1, player *player2);
     void start();
 private:
     playfield_impl field;
-    numbered_player &player1;
-    numbered_player &player2;
+    player *player1;
+    player *player2;
 
-    numbered_player *current_player;
+    player *current_player;
     
-    // ChangePlayer returns the number of the new player
+    // toggles current_player from player1 to player2 and vice versa
     void change_player();
+
+    // returns 1 if corrent_player is player1 and 2 if current_player is player2
+    int current_player_number();
 };
 
 #endif // CONNECT4_H_

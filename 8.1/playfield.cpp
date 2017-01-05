@@ -15,36 +15,36 @@ playfield_impl::playfield_impl(const playfield &field) {
 }
 
 int playfield_impl::stoneat(int x, int y) const { 
-    assert(isValidColumn(x));
-    assert(isValidRow(y));
+    assert(is_valid_column(x));
+    assert(is_valid_row(y));
 
     return rep[x][y]; 
 }
 
-bool playfield_impl::canSetStone(int x) {
-    assert(isValidColumn(x));
+bool playfield_impl::can_set_stone(int x) {
+    assert(is_valid_column(x));
 
     return !stoneat(x, 0);
 }
 
-bool playfield_impl::isValidPlayer(int player) {
+bool playfield_impl::is_valid_player(int player) {
     return player == none 
         || player == player1
         || player == player2;
 }
 
-bool playfield_impl::isValidColumn(int x) {
+bool playfield_impl::is_valid_column(int x) {
     return x >= 0 && x < playfield::width;
 }
 
-bool playfield_impl::isValidRow(int y) {
+bool playfield_impl::is_valid_row(int y) {
     return y >= 0 && y < playfield::height;
 }
 
-int playfield_impl::setStone(int player, int x) {
-    assert(isValidColumn(x));
-    assert(isValidPlayer(player));
-    assert(canSetStone(x));
+int playfield_impl::set_stone(int player, int x) {
+    assert(is_valid_column(x));
+    assert(is_valid_player(player));
+    assert(can_set_stone(x));
 
     int i = playfield::height - 1;
     while(stoneat(x, i) != 0) i--;
@@ -52,11 +52,11 @@ int playfield_impl::setStone(int player, int x) {
     return i;
 }
 
-bool playfield_impl::isWin(int player, int x, int y, int dx, int dy) {
-    assert(isValidPlayer(player));
+bool playfield_impl::is_win(int player, int x, int y, int dx, int dy) {
+    assert(is_valid_player(player));
 
-    if(!isValidColumn(x)) return false;
-    if(!isValidRow(y)) return false;
+    if(!is_valid_column(x)) return false;
+    if(!is_valid_row(y)) return false;
 
     int same = 0;
     bool inverted = false;
@@ -65,7 +65,7 @@ bool playfield_impl::isWin(int player, int x, int y, int dx, int dy) {
         int xx = inverted ? x - (i * dx) : x + (i * dx);
         int yy = inverted ? y - (i * dy) : y + (i * dy);
 
-        bool found = isValidColumn(xx) && isValidRow(yy) && stoneat(xx, yy) == player;
+        bool found = is_valid_column(xx) && is_valid_row(yy) && stoneat(xx, yy) == player;
 
         if(found)
             if(++same == 4) return true;
@@ -82,43 +82,43 @@ bool playfield_impl::isWin(int player, int x, int y, int dx, int dy) {
     return same >= 4;
 }
 
-bool playfield_impl::isWin(int player, int x, int y) {
-    assert(isValidPlayer(player));
-    assert(isValidColumn(x));
-    assert(isValidRow(y));
+bool playfield_impl::is_win(int player, int x, int y) {
+    assert(is_valid_player(player));
+    assert(is_valid_column(x));
+    assert(is_valid_row(y));
 
     bool win = false;
 
-    win = win || isWin(player, x, y,  1, 0);
-    win = win || isWin(player, x, y,  0, 1);
-    win = win || isWin(player, x, y,  1, 1);
-    win = win || isWin(player, x, y, -1, 1);
+    win = win || is_win(player, x, y,  1, 0);
+    win = win || is_win(player, x, y,  0, 1);
+    win = win || is_win(player, x, y,  1, 1);
+    win = win || is_win(player, x, y, -1, 1);
 
     return win;
 }
 
-bool playfield_impl::isFull() {
+bool playfield_impl::is_full() {
     for(int x = 0; x < playfield::width; x++)
-        if(canSetStone(x)) return false;
+        if(can_set_stone(x)) return false;
     return true;
 }
 
-bool playfield_impl::setStoneInColumn(int player, int x) {
-    if(!isValidColumn(x)) {
+bool playfield_impl::set_stone_in_column(int player, int x) {
+    if(!is_valid_column(x)) {
         std::cout << "Given column is not valid!" << std::endl;
         return false;
     }
-    if(!isValidPlayer(player)) {
+    if(!is_valid_player(player)) {
         std::cout << "Given player is no valid player!" << std::endl;
         return false;
     }
-    if(!canSetStone(x)) {
+    if(!can_set_stone(x)) {
         std::cout << "Cannot set stone in column " << x << ". Column is full." << std::endl;
         return false;
     }
 
-    int y = setStone(player, x);
-    return isWin(player, x, y);
+    int y = set_stone(player, x);
+    return is_win(player, x, y);
 }
 
 void playfield_impl::print(){

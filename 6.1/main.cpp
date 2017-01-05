@@ -10,7 +10,7 @@ int main() {
     human_player human(1);
     cpu_player cpu(2);
 
-    connect4 game(field, human, cpu);
+    connect4 game(field, &human, &cpu);
 
     game.start();
     return 0;

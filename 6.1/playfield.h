@@ -24,20 +24,20 @@ public:
 class playfield_impl : public playfield {
 protected:
     char rep[playfield::width][playfield::height] = {0};
-    // SetStone returns the y position where the stone was set
-    int setStone(int player, int x);
-    bool isWin(int player, int x, int y);
-    bool isWin(int player, int x, int y, int dx, int dy);
-    static bool isValidPlayer(int player);
-    static bool isValidColumn(int x);
-    static bool isValidRow(int y);
+    // set_stone returns the y position where the stone was set
+    int set_stone(int player, int x);
+    bool is_win(int player, int x, int y);
+    bool is_win(int player, int x, int y, int dx, int dy);
+    static bool is_valid_player(int player);
+    static bool is_valid_column(int x);
+    static bool is_valid_row(int y);
 public:
     playfield_impl();
     playfield_impl(const playfield &field);
     int stoneat(int x, int y) const;
-    bool isFull();
-    bool canSetStone(int x);
-    bool setStoneInColumn(int player, int x);
+    bool is_full();
+    bool can_set_stone(int x);
+    bool set_stone_in_column(int player, int x);
     void print();
 };
 

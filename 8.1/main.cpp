@@ -54,7 +54,7 @@ int main() {
     } while(!player2_selected);
 
     playfield_impl field;
-    connect4 game(field, *player1, *player2);
+    connect4 game(field, player1, player2);
     game.start();
 
     delete player1;
