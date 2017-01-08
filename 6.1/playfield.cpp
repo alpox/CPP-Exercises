@@ -103,22 +103,22 @@ bool playfield_impl::is_full() {
     return true;
 }
 
-bool playfield_impl::set_stone_in_column(int player, int x) {
+int playfield_impl::set_stone_in_column(int player, int x) {
     if(!is_valid_column(x)) {
         std::cout << "Given column is not valid!" << std::endl;
-        return false;
+        return -1;
     }
     if(!is_valid_player(player)) {
         std::cout << "Given player is no valid player!" << std::endl;
-        return false;
+        return -1;
     }
     if(!can_set_stone(x)) {
         std::cout << "Cannot set stone in column " << x << ". Column is full." << std::endl;
-        return false;
+        return -1;
     }
 
     int y = set_stone(player, x);
-    return is_win(player, x, y);
+    return y;
 }
 
 void playfield_impl::print(){

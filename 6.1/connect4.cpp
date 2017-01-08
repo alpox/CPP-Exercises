@@ -8,10 +8,12 @@ void connect4::start() {
     // Enter game loop
     while(true) {
 
-        int col = current_player->play(field);
-        bool win = field.set_stone_in_column(current_player_number(), col);
+        int x = current_player->play(field);
+        int y = field.set_stone_in_column(current_player_number(), x);
 
-        if(win) {
+        if(y == -1) continue;
+
+        if(field.is_win(current_player_number(), x, y)) {
             field.print();
             std::cout << "Player " << current_player_number() << " won the game!" << std::endl;
             break;

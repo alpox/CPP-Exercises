@@ -26,8 +26,6 @@ protected:
     char rep[playfield::width][playfield::height] = {0};
     // set_stone returns the y position where the stone was set
     int set_stone(int player, int x);
-    bool is_win(int player, int x, int y);
-    bool is_win(int player, int x, int y, int dx, int dy);
     static bool is_valid_player(int player);
     static bool is_valid_column(int x);
     static bool is_valid_row(int y);
@@ -37,7 +35,12 @@ public:
     int stoneat(int x, int y) const;
     bool is_full();
     bool can_set_stone(int x);
-    bool set_stone_in_column(int player, int x);
+
+    // Returns the y coordinate of the stone which was set.
+    // If the stone could not be set returns -1.
+    int set_stone_in_column(int player, int x);
+    bool is_win(int player, int x, int y);
+    bool is_win(int player, int x, int y, int dx, int dy);
     void print();
 };
 

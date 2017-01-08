@@ -1,7 +1,6 @@
 
 #include "player.h"
 
-
 numbered_player::numbered_player(const int &number) : number(number) {}
 
 int numbered_player::get_number() const {
