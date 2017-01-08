@@ -12,7 +12,7 @@ void testThrowsOnRangeLimit() {
         try {
             it++;
         }
-        catch(std::range_error &e) {
+        catch(std::out_of_range &e) {
             break;
         }
     }

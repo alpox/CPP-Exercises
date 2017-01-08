@@ -10,14 +10,14 @@ RangeIterator::~RangeIterator() {}
 
 RangeIterator& RangeIterator::operator++() throw (std::range_error) { 
     if(ptr+1 == stop)
-        throw std::range_error("Tried to surpass end of the iterator range.");
+        throw std::out_of_range("Tried to surpass end of the iterator range.");
     ptr++; 
     return *this; 
 }
 
 RangeIterator RangeIterator::operator++(int) throw (std::range_error) { 
     if(ptr+1 == stop)
-        throw std::range_error("Tried to surpass end of the iterator range.");
+        throw std::out_of_range("Tried to surpass end of the iterator range.");
 
     RangeIterator tmp(*this); 
     operator++(); 
