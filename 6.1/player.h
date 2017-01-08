@@ -114,10 +114,10 @@ private:
 };
 
 template<typename template_player_type>
-class template_player : public numbered_player {
-    template_player_type internal_player;
+class template_player : public player {
+    template_player_type &internal_player;
 public:
-    template_player(const int& number) : numbered_player(number), internal_player(number) {};
+    template_player(template_player_type &internal_player) : internal_player(internal_player) {};
     virtual int play(const playfield &field) {
         return internal_player.play(field);
     };

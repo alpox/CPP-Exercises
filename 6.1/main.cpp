@@ -8,7 +8,8 @@ int main() {
 
     playfield_impl field;
     human_player human(1);
-    template_player<foreign::player<playfield_impl>> cpu(2);
+    foreign::player<playfield_impl> cpu_player(2);
+    template_player<foreign::player<playfield_impl>> cpu(cpu_player);
 
     connect4 game(field, &human, &cpu);
 
